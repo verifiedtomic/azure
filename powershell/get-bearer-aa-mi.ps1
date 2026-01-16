@@ -2,6 +2,7 @@
 param(
     [Parameter(Mandatory=$true)][bool]$requireMonitorToken,
     [Parameter(Mandatory=$true)][bool]$requireGraphApiToken,
+    [Parameter(Mandatory=$true)][bool]$requirePowerBIApiToken,
     [Parameter(Mandatory=$true)][string]$automationAccountResourceId
 )
 
@@ -109,4 +110,29 @@ if($requireMonitorToken){
     Write-Output "=== MONITOR TOKEN START ==="
     Write-Output $unsecuredMonitorToken
     Write-Output "=== MONITOR TOKEN END ==="
+}
+
+if($requirePowerBIApiToken){
+    # Get Power BI API  Access Token
+    try {
+        Write-Output "Getting Power BI API Azure Access Token..."
+        $securedPowerBIAPITokenResponse = Get-AzAccessToken -ResourceUrl "https://analysis.windows.net/powerbi/api" -AsSecureString
+    }
+    catch {
+        $Error
+        Write-Error "Failed to get Power BI API Access Token!"
+    }
+
+    # Convert from Secure String to Plain Text
+    Write-Output "Converting Power BI API Token from Secure String to Plain Text..."
+    try {
+        $unsecuredPowerBIToken = $securedPowerBIAPITokenResponse.Token | ConvertFrom-SecureString -AsPlainText
+    }
+    catch {
+        throw "Failed to convert Power BI API Token from Secure String to Plain Text!"
+    }
+
+    Write-Output "=== POWER BI API TOKEN START ==="
+    Write-Output $unsecuredPowerBIToken
+    Write-Output "=== POWER BI API TOKEN END ==="
 }
