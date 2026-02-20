@@ -116,7 +116,8 @@ if($requirePowerBIApiToken){
     # Get Power BI API  Access Token
     try {
         Write-Output "Getting Power BI API Azure Access Token..."
-        $securedPowerBIAPITokenResponse = Get-AzAccessToken -ResourceUrl "https://analysis.windows.net/powerbi/api" -AsSecureString
+        #$securedPowerBIAPITokenResponse = Get-AzAccessToken -ResourceUrl "https://analysis.windows.net/powerbi/api" -AsSecureString
+        $securedPowerBIAPITokenResponse = Get-AzAccessToken -ResourceUrl "https://analysis.windows.net/powerbi/api/.default" -AsSecureString
     }
     catch {
         $Error
