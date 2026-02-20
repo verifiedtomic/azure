@@ -1,0 +1,11 @@
+{
+  "scriptFile": "../get-bearer-fa-mi.ps1",
+  "bindings": [
+    {
+      "name": "GetFATokenTimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 0 0 28 12 *"
+    }
+  ]
+}
