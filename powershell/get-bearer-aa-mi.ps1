@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory=$true)][bool]$requireMonitorToken,
     [Parameter(Mandatory=$true)][bool]$requireGraphApiToken,
     [Parameter(Mandatory=$true)][bool]$requirePowerBIApiToken,
+    [Parameter(Mandatory=$true)][bool]$requireStorageToken,
     [Parameter(Mandatory=$true)][string]$automationAccountResourceId
 )
 
@@ -136,4 +137,29 @@ if($requirePowerBIApiToken){
     Write-Output "=== POWER BI API TOKEN START ==="
     Write-Output $unsecuredPowerBIToken
     Write-Output "=== POWER BI API TOKEN END ==="
+}
+
+if($requireStorageToken){
+    # Get Storage Access Token
+    try {
+        Write-Output "Getting Storage Azure Access Token..."
+        $securedStorageTokenResponse = Get-AzAccessToken -ResourceUrl "https://storage.azure.com/" -AsSecureString
+    }
+    catch {
+        $Error
+        Write-Error "Failed to get Storage Access Token!"
+    }
+
+    # Convert from Secure String to Plain Text
+    Write-Output "Converting Storage Token from Secure String to Plain Text..."
+    try {
+        $unsecuredStorageToken = $securedStorageTokenResponse.Token | ConvertFrom-SecureString -AsPlainText
+    }
+    catch {
+        throw "Failed to convert Storage Token from Secure String to Plain Text!"
+    }
+
+    Write-Output "=== STORAGE TOKEN START ==="
+    Write-Output $unsecuredStorageToken
+    Write-Output "=== STORAGE TOKEN END ==="
 }
